@@ -499,6 +499,9 @@ window.copyPix = function(){
 let drawing = false;
 window.runDraw = async function(){
   if(drawing) return;
+  const pin = prompt('Digite a senha para realizar o sorteio:');
+  if(pin === null) return;
+  if(pin !== SECRET_PIN){ alert('Senha incorreta.'); return; }
   const paidNumbers = entries.filter(e => e.status === 'pago').flatMap(e => e.numbers);
   const sold = [...new Set(paidNumbers)];
   if(sold.length === 0){ alert('Ainda não há nenhum número com pagamento confirmado.'); return; }
