@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Rifa Chá de Casa Nova</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  body{font-family:Arial,sans-serif;background:#E4F7E4;padding:20px;max-width:480px;margin:0 auto;color:#3E2C41;}
+  h1{font-size:1.3rem;}
+  label{display:block;margin-top:14px;font-weight:bold;font-size:0.9rem;}
+  input,textarea{width:100%;padding:10px;border-radius:8px;border:2px solid #B79EE0;margin-top:4px;font-size:1rem;box-sizing:border-box;}
+  button{width:100%;margin-top:18px;padding:14px;background:#FF6B4D;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:bold;cursor:pointer;}
+  button:disabled{background:#ccc;}
+  #msg{margin-top:14px;padding:12px;border-radius:8px;font-size:0.9rem;display:none;}
+  #msg.ok{background:#D4F7D4;display:block;}
+  #msg.err{background:#FFD6D6;display:block;}
+</style>
+</head>
+<body>
+  <h1>🔒 Confirmar compra manual</h1>
+  <p style="font-size:0.85rem;color:#6B5670;">Use isso só para pagamentos feitos direto no seu Pix pessoal (fora do Mercado Pago).</p>
+
+  <label>Senha de admin</label>
+  <input type="password" id="adminKey" placeholder="Sua senha">
+
+  <label>Nome completo do comprador</label>
+  <input type="text" id="name" placeholder="Nome">
+
+  <label>WhatsApp</label>
+  <input type="text" id="phone" placeholder="47999999999">
+
+  <label>Números (separados por vírgula)</label>
+  <textarea id="numbers" rows="3" placeholder="Ex: 1, 5, 12, 30"></textarea>
+
+  <button id="btn" onclick="submitEntry()">Confirmar compra</button>
+  <div id="msg"></div>
+
+<script>
+async function submitEntry(){
+  const btn = document.getElementById('btn');
+  const msg = document.getElementById('msg');
+  msg.className = ''; msg.style.display = 'none';
+
+  const adminKey = document.getElementById('adminKey').value;
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const numbersRaw = document.getElementById('numbers').value.trim();
+  const numbers = numbersRaw.split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
+
+  if(!adminKey || !name || !phone || numbers.length === 0){
+    msg.textContent = 'Preencha todos os campos.';
+    msg.className = 'err';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Confirmando...';
+
+  try{
+    const resp = await fetch('/.netlify/functions/admin-add-entry', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ adminKey, name, phone, numbers })
+    });
+    const data = await resp.json();
+
+    if(resp.status === 401){
+      msg.textContent = 'Senha incorreta.';
+      msg.className = 'err';
+    } else if(resp.status === 409){
+      msg.textContent = 'Estes números já estão vendidos: ' + data.numbers.join(', ');
+      msg.className = 'err';
+    } else if(!resp.ok){
+      msg.textContent = 'Erro: ' + (data.error || 'desconhecido');
+      msg.className = 'err';
+    } else {
+      msg.textContent = 'Confirmado! Números: ' + data.numbers.join(', ');
+      msg.className = 'ok';
+      document.getElementById('name').value = '';
+      document.getElementById('phone').value = '';
+      document.getElementById('numbers').value = '';
+    }
+  }catch(e){
+    msg.textContent = 'Erro de conexão. Tente novamente.';
+    msg.className = 'err';
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Confirmar compra';
+}
+</script>
+</body>
+</html>
