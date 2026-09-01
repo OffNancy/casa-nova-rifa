@@ -305,12 +305,14 @@ window.toggleTotalReveal = function(){
   if(totalRevealed){
     totalRevealed = false;
     renderTotal(currentTotal);
+    render();
     return;
   }
   const pin = prompt('Digite o PIN para ver o valor arrecadado:');
   if(pin === SECRET_PIN){
     totalRevealed = true;
     renderTotal(currentTotal);
+    render();
   } else if(pin !== null){
     alert('PIN incorreto.');
   }
@@ -375,7 +377,7 @@ function render(){
           <div class="who">${escapeHtml(e.name)}${e.status==='pendente' ? ' <span style="font-weight:400;color:var(--plum-soft);font-size:0.78rem;">(aguardando pagamento)</span>' : ''}</div>
           <div class="nums">nº ${e.numbers.map(pad).join(', ')}</div>
         </div>
-        <div class="val">R$ ${e.value.toLocaleString('pt-BR')}</div>
+        <div class="val">${totalRevealed ? ('R$ ' + e.value.toLocaleString('pt-BR')) : '🔒'}</div>
       </div>
     `).join('');
   }
