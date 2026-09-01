@@ -204,10 +204,10 @@
 
   <div class="card pix-box">
     <h2>💸 Dados para o Pix</h2>
-    <div class="pix-row"><span>Chave (celular)</span><span class="pix-key-line"><strong>47997657281</strong><button class="copy-btn" onclick="copyPix()">Copiar</button></span></div>
-    <div class="pix-row"><span>Banco</span><strong>Inter</strong></div>
+    <img src="/qr-pix.png" alt="QR Code Pix" style="display:block;width:180px;max-width:60%;margin:0 auto 14px;border-radius:10px;">
+    <div class="pix-row"><span>Chave (aleatória)</span><span class="pix-key-line"><strong style="font-size:0.8rem;word-break:break-all;">dbfd66ad-b212-40e8-8876-4ff33028facf</strong><button class="copy-btn" onclick="copyPix()">Copiar</button></span></div>
     <div class="pix-row"><span>Recebedor</span><strong>Inancy Santana dos Santos</strong></div>
-    <p style="font-size:0.8rem;color:var(--plum-soft);margin:8px 0 0;">Confira esses dados antes de fazer o Pix do seu número 💜</p>
+    <p style="font-size:0.8rem;color:var(--plum-soft);margin:8px 0 0;">Aponte a câmera pro QR code, ou copie a chave e confira os dados antes de fazer o Pix do seu número 💜</p>
     <a href="https://wa.me/5547997657281?text=Oi%20Nancy%2C%20aqui%20est%C3%A1%20meu%20comprovante%20do%20Pix%20da%20rifa!" target="_blank" style="display:block;text-align:center;margin-top:12px;background:#25D366;color:#FFFFFF;text-decoration:none;padding:12px;border-radius:10px;font-family:'Baloo 2';font-weight:700;">📲 Enviar comprovante no WhatsApp</a>
   </div>
 
@@ -250,7 +250,7 @@
     </div>
   </div>
 
-  <p class="footer-note">Feito com carinho pela Nancy, pro meu Chá de Casa Nova 💛</p>
+  <p class="footer-note">Feito com carinho pela Nancy, pro meu Chá de Casa Nova 💛 <a href="/admin.html" style="color:inherit;text-decoration:none;opacity:0.35;">·</a></p>
 </div>
 
 <div class="cart-bar" id="cartBar">
@@ -459,7 +459,7 @@ window.confirmPurchase = async function(){
 }
 
 window.copyPix = function(){
-  navigator.clipboard.writeText('47997657281').then(() => {
+  navigator.clipboard.writeText('dbfd66ad-b212-40e8-8876-4ff33028facf').then(() => {
     const b = event.target;
     const old = b.textContent;
     b.textContent = 'Copiado!';
