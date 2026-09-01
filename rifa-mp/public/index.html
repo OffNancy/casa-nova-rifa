@@ -6,7 +6,7 @@
 <title>Chá de Casa Nova da Nancy — Rifa</title>
 <meta name="description" content="Compre seu número e concorra a R$500 no Pix! Rifa do Chá de Casa Nova da Nancy.">
 <meta property="og:title" content="Chá de Casa Nova da Nancy 🏡 — Rifa">
-<meta property="og:description" content="Compre seu número por R$10 e concorra a R$500 no Pix! Ajude a Nancy nessa nova fase.">
+<meta property="og:description" content="Compre seu número por R$10 e concorra a R$500 no Pix! Me ajude nessa nova fase.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://rifa-meu-cha-casa-nova.netlify.app/">
 <meta property="og:image" content="https://rifa-meu-cha-casa-nova.netlify.app/preview.png">
@@ -198,7 +198,7 @@
       <circle cx="45" cy="170" r="4" fill="#E9DEFA"/>
     </svg>
     <h1>Chá de Casa Nova da Nancy 🏡</h1>
-    <p>Ajude a Nancy a começar essa nova fase e concorra a um prêmio no Pix!</p>
+    <p>Me ajude a começar essa nova fase e concorra a um prêmio no Pix!</p>
   </div>
   <p class="conn-note" id="connNote"></p>
 
@@ -236,13 +236,6 @@
     <div id="salesLog"><p class="empty-msg">Ninguém comprou ainda — seja a primeira pessoa! 💌</p></div>
   </div>
 
-  <div class="card" id="reportCard" style="display:none;">
-    <h2>📋 Relatório por pessoa</h2>
-    <table class="report-table">
-      <thead><tr><th>Nome</th><th>Números</th><th>Qtd</th><th>Total</th></tr></thead>
-      <tbody id="reportBody"></tbody>
-    </table>
-  </div>
 
   <div class="card draw-card">
     <h2>🎉 Sorteio final</h2>
@@ -257,7 +250,7 @@
     </div>
   </div>
 
-  <p class="footer-note">Feito com carinho para o Chá de Casa Nova da Nancy 💛</p>
+  <p class="footer-note">Feito com carinho pela Nancy, pro meu Chá de Casa Nova 💛</p>
 </div>
 
 <div class="cart-bar" id="cartBar">
@@ -387,28 +380,6 @@ function render(){
     `).join('');
   }
 
-  const reportCard = document.getElementById('reportCard');
-  const grouped = {};
-  visibleEntries.forEach(e => {
-    const key = e.name.trim().toLowerCase();
-    if(!grouped[key]) grouped[key] = { name: e.name.trim(), numbers: [], value: 0 };
-    grouped[key].numbers.push(...e.numbers);
-    grouped[key].value += e.value;
-  });
-  const multi = Object.values(grouped).filter(g => g.numbers.length > 1);
-  if(multi.length > 0){
-    reportCard.style.display = 'block';
-    document.getElementById('reportBody').innerHTML = multi.map(g => `
-      <tr>
-        <td>${escapeHtml(g.name)}</td>
-        <td>${g.numbers.sort((a,b)=>a-b).map(pad).join(', ')}</td>
-        <td>${g.numbers.length}</td>
-        <td>R$ ${g.value.toLocaleString('pt-BR')}</td>
-      </tr>
-    `).join('');
-  } else {
-    reportCard.style.display = 'none';
-  }
 
   const cartBar = document.getElementById('cartBar');
   if(selected.length > 0){
