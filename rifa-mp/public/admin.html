@@ -36,6 +36,71 @@
   <button id="btn" onclick="submitEntry()">Confirmar compra</button>
   <div id="msg"></div>
 
+  <hr style="margin-top:32px;border:none;border-top:2px dashed #B79EE0;">
+
+  <h1 style="margin-top:24px;">🔓 Liberar números perdidos</h1>
+  <p style="font-size:0.85rem;color:#6B5670;">Use isso pra devolver pra venda números que ficaram travados sem comprador de verdade (ex: testes ou compras canceladas).</p>
+
+  <label>Senha de admin</label>
+  <input type="password" id="freeAdminKey" placeholder="Sua senha">
+
+  <label>Números a liberar (separados por vírgula)</label>
+  <textarea id="freeNumbers" rows="3" placeholder="Ex: 1, 5, 12, 30"></textarea>
+
+  <button id="freeBtn" onclick="freeNumbers()">Liberar números</button>
+  <div id="freeMsg"></div>
+
+<script>
+async function freeNumbers(){
+  const btn = document.getElementById('freeBtn');
+  const msg = document.getElementById('freeMsg');
+  msg.className = ''; msg.style.display = 'none';
+
+  const adminKey = document.getElementById('freeAdminKey').value;
+  const numbersRaw = document.getElementById('freeNumbers').value.trim();
+  const numbers = numbersRaw.split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
+
+  if(!adminKey || numbers.length === 0){
+    msg.textContent = 'Preencha a senha e os números.';
+    msg.className = 'err';
+    msg.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Liberando...';
+
+  try{
+    const resp = await fetch('/.netlify/functions/admin-free-numbers', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ adminKey, numbers })
+    });
+    const data = await resp.json();
+
+    if(resp.status === 401){
+      msg.textContent = 'Senha incorreta.';
+      msg.className = 'err';
+    } else if(!resp.ok){
+      msg.textContent = 'Erro: ' + (data.error || 'desconhecido');
+      msg.className = 'err';
+    } else {
+      msg.textContent = 'Liberados ' + data.removedCount + ' número(s)!';
+      msg.className = 'ok';
+      document.getElementById('freeNumbers').value = '';
+    }
+    msg.style.display = 'block';
+  }catch(e){
+    msg.textContent = 'Erro de conexão. Tente novamente.';
+    msg.className = 'err';
+    msg.style.display = 'block';
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Liberar números';
+}
+</script>
+
 <script>
 async function submitEntry(){
   const btn = document.getElementById('btn');
